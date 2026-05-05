@@ -1084,13 +1084,33 @@ async function carregarDoCSV() {
     const resp = await fetch(CSV_URL + '&t=' + Date.now());
     if (!resp.ok) throw new Error('Erro HTTP ' + resp.status);
     const text = await resp.text();
-    const lines = text.trim().split('\n').map(l => l.split(',').map(v => v.trim().replace(/^"|"$/g, '')));
+    // Parser de CSV que respeita campos entre aspas
+    function parseCSV(text) {
+      return text.trim().split('\n').map(line => {
+        const fields = [];
+        let cur = '';
+        let inQuotes = false;
+        for (let i = 0; i < line.length; i++) {
+          const ch = line[i];
+          if (ch === '"') {
+            inQuotes = !inQuotes;
+          } else if (ch === ',' && !inQuotes) {
+            fields.push(cur.trim());
+            cur = '';
+          } else {
+            cur += ch;
+          }
+        }
+        fields.push(cur.trim());
+        return fields;
+      });
+    }
 
+    const lines = parseCSV(text);
     if (lines.length < 2) throw new Error('Planilha sem dados');
 
-    // Mapeia cabeçalho
-    const headers = lines[0].map(h => h.toLowerCase().trim());
-    const dataLine = lines[lines.length - 1]; // pega a última linha
+    const headers = lines[0].map(h => h.toLowerCase().trim().replace(/^"|"$/g, ''));
+    const dataLine = lines[lines.length - 1].map(v => v.replace(/^"|"$/g, ''));
 
     function val(key) {
       const idx = headers.indexOf(key);
@@ -1100,6 +1120,7 @@ async function carregarDoCSV() {
     // Converte formato BR (1.234,56) para número
     function parseBR(str) {
       if (!str) return null;
+      // Remove pontos de milhar, troca vírgula decimal por ponto
       const clean = str.trim().replace(/\./g, '').replace(',', '.');
       const n = parseFloat(clean);
       return isNaN(n) ? null : n;
