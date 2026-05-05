@@ -1097,11 +1097,19 @@ async function carregarDoCSV() {
       return idx >= 0 ? dataLine[idx] : null;
     }
 
+    // Converte formato BR (1.234,56) para número
+    function parseBR(str) {
+      if (!str) return null;
+      const clean = str.trim().replace(/\./g, '').replace(',', '.');
+      const n = parseFloat(clean);
+      return isNaN(n) ? null : n;
+    }
+
     const state = {
       dia:             parseInt(val('dia')) || null,
-      receita_geral:   parseFloat((val('receita_geral') || '').replace(',', '.')) || null,
+      receita_geral:   parseBR(val('receita_geral')),
       pedidos_geral:   parseInt(val('pedidos_geral')) || null,
-      receita_stefani: parseFloat((val('receita_stefani') || '').replace(',', '.')) || null,
+      receita_stefani: parseBR(val('receita_stefani')),
       pedidos_stefani: parseInt(val('pedidos_stefani')) || null,
       feriados:        parseInt(val('feriados')) || null,
       atualizado_em:   val('atualizado_em') || null
