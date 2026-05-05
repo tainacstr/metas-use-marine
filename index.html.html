@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Metas Maio 2026 — Use Marine</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Serif+Display:ital@0;1&display=swap');
+
+  :root {
+    --bg: #F5F3EE;
+    --bg2: #EDEBE4;
+    --card: #FFFFFF;
+    --border: #D8D5CC;
+    --border2: #C8C4B8;
+    --text: #1A1916;
+    --text2: #6B6860;
+    --text3: #9B9890;
+    --accent: #1A1916;
+    --accent-bg: #F0EFEC;
+    --green: #2A6B4A;
+    --green-bg: #EBF5F0;
+    --amber: #8F6B1A;
+    --amber-bg: #FAF3E0;
+    --red: #8F2A2A;
+    --red-bg: #FAE8E8;
+
+    --bronze: #A0522D;
+    --bronze-bg: #FAF0E6;
+    --bronze-border: #D4A57A;
+    --silver: #607080;
+    --silver-bg: #F0F4F8;
+    --silver-border: #A8BCD0;
+    --gold: #8F6B1A;
+    --gold-bg: #FDF8EC;
+    --gold-border: #D4B060;
+
+    --radius: 12px;
+    --radius-sm: 8px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.05);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  header {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    letter-spacing: -0.02em;
+  }
+  .logo span { color: var(--text); }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .month-badge {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text3);
+  }
+
+  .main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 28px 24px 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* Page title */
+  .page-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    color: var(--text);
+    letter-spacing: -0.02em;
+  }
+  .page-sub {
+    font-size: 14px;
+    color: var(--text3);
+    margin-top: 4px;
+  }
+
+  /* Input Panel */
+  .input-panel {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  .panel-header {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text3);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .input-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0;
+  }
+
+  .input-cell {
+    padding: 18px 20px;
+    border-right: 1px solid var(--border);
+  }
+  .input-cell:last-child { border-right: none; }
+
+  .input-cell label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+  }
+
+  .input-cell input {
+    width: 100%;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--text);
+    border: none;
+    background: transparent;
+    outline: none;
+    padding: 0;
+  }
+
+  .input-cell input::placeholder { color: var(--border2); }
+
+  .input-cell .hint {
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 4px;
+  }
+
+  .input-row-bottom {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .btn-update {
+    padding: 16px 28px;
+    background: var(--text);
+    color: #fff;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s;
+    white-space: nowrap;
+  }
+  .btn-update:hover { background: #3A3835; }
+
+  /* Day indicator */
+  .day-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 20px;
+  }
+
+  .day-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text3);
+    white-space: nowrap;
+  }
+
+  .day-selector {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .day-selector button {
+    width: 28px; height: 28px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg);
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text2);
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .day-selector button:hover { background: var(--accent-bg); border-color: var(--accent); color: var(--accent); }
+
+  .day-num {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text);
+    min-width: 32px;
+    text-align: center;
+  }
+
+  .day-name {
+    font-size: 13px;
+    color: var(--text2);
+  }
+
+  .weekday-info {
+    font-size: 12px;
+    color: var(--text3);
+  }
+
+  /* Progress section */
+  .section-title {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text3);
+    padding: 0 4px;
+  }
+
+  /* Meta cards */
+  .meta-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .meta-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  .meta-card.bronze { border: 1px solid var(--bronze-border); }
+  .meta-card.silver { border: 1px solid var(--silver-border); }
+  .meta-card.gold   { border: 1px solid var(--gold-border); }
+
+  .meta-top {
+    padding: 16px 18px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .meta-tier {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .tier-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .bronze .tier-label { color: var(--bronze); }
+  .silver .tier-label { color: var(--silver); }
+  .gold   .tier-label { color: var(--gold); }
+
+  .tier-pct {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 10px;
+  }
+  .bronze .tier-pct { background: var(--bronze-bg); color: var(--bronze); }
+  .silver .tier-pct { background: var(--silver-bg); color: var(--silver); }
+  .gold   .tier-pct { background: var(--gold-bg); color: var(--gold); }
+
+  .meta-target {
+    font-family: 'DM Serif Display', serif;
+    font-size: 26px;
+    color: var(--text);
+    letter-spacing: -0.02em;
+    margin-bottom: 2px;
+  }
+
+  .meta-commission {
+    font-size: 12px;
+    color: var(--text3);
+  }
+
+  /* Progress bar */
+  .progress-wrap {
+    padding: 10px 18px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .progress-bar-bg {
+    height: 6px;
+    border-radius: 3px;
+    background: var(--border);
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.5s ease;
+  }
+  .bronze .progress-bar-fill { background: var(--bronze); }
+  .silver .progress-bar-fill { background: var(--silver); }
+  .gold   .progress-bar-fill { background: var(--gold); }
+
+  .progress-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6px;
+    font-size: 11px;
+    color: var(--text3);
+  }
+
+  /* Meta bottom stats */
+  .meta-stats {
+    padding: 12px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 12px;
+  }
+
+  .stat-label { color: var(--text3); }
+  .stat-value { font-weight: 500; color: var(--text); }
+  .stat-value.good { color: var(--green); }
+  .stat-value.warn { color: var(--amber); }
+  .stat-value.bad  { color: var(--red); }
+
+  .on-track-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-top: 6px;
+  }
+  .badge-ok   { background: var(--green-bg); color: var(--green); }
+  .badge-warn { background: var(--amber-bg); color: var(--amber); }
+  .badge-no   { background: var(--red-bg);   color: var(--red); }
+  .badge-done { background: var(--accent-bg); color: var(--accent); }
+
+  /* Stéfani section */
+  .stefani-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .stefani-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 16px 18px;
+  }
+
+  .stefani-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .stefani-name {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text3);
+  }
+
+  .stefani-tier {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 2px 7px;
+    border-radius: 8px;
+  }
+  .bronze .stefani-tier { background: var(--bronze-bg); color: var(--bronze); }
+  .silver .stefani-tier { background: var(--silver-bg); color: var(--silver); }
+  .gold   .stefani-tier { background: var(--gold-bg);   color: var(--gold); }
+
+  .stefani-target {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    color: var(--text);
+    letter-spacing: -0.02em;
+    margin-bottom: 2px;
+  }
+
+  .stefani-sub { font-size: 11px; color: var(--text3); margin-bottom: 8px; }
+
+  .stefani-progress-bg {
+    height: 4px;
+    border-radius: 2px;
+    background: var(--border);
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .stefani-progress-fill {
+    height: 100%;
+    border-radius: 2px;
+    background: var(--text);
+    transition: width 0.5s ease;
+  }
+
+  .stefani-stats { display: flex; flex-direction: column; gap: 4px; }
+
+  /* Daily rhythm */
+  .rhythm-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  .rhythm-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .rhythm-col-header {
+    padding: 8px 4px;
+    text-align: center;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text3);
+    border-right: 1px solid var(--border);
+  }
+  .rhythm-col-header:last-child { border-right: none; }
+
+  .rhythm-cells {
+    display: contents;
+  }
+
+  .rhythm-cell {
+    padding: 10px 4px;
+    text-align: center;
+    border-right: 1px solid var(--border);
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--text3);
+    position: relative;
+    cursor: default;
+    transition: background 0.1s;
+  }
+  .rhythm-cell:last-child { border-right: none; }
+  .rhythm-cell.today { background: var(--accent-bg); }
+  .rhythm-cell.has-data { color: var(--text); }
+  .rhythm-cell.is-weekend { background: var(--bg2); }
+  .rhythm-cell.is-holiday { background: var(--red-bg); }
+
+  .rhythm-day { font-weight: 600; font-size: 13px; color: inherit; display: block; }
+  .rhythm-val { font-size: 10px; color: var(--text3); display: block; margin-top: 2px; }
+  .rhythm-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    margin: 3px auto 0;
+  }
+
+  /* Needed per day box */
+  .needed-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .needed-cell {
+    padding: 14px 18px;
+    border-right: 1px solid var(--border);
+  }
+  .needed-cell:last-child { border-right: none; }
+
+  .needed-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 6px;
+  }
+  .bronze .needed-label { color: var(--bronze); }
+  .silver .needed-label { color: var(--silver); }
+  .gold   .needed-label { color: var(--gold); }
+
+  .needed-value {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    color: var(--text);
+    letter-spacing: -0.02em;
+  }
+  .needed-sub { font-size: 11px; color: var(--text3); margin-top: 2px; }
+
+  /* Summary band */
+  .summary-band {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 22px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: var(--shadow);
+  }
+
+  .summary-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .summary-icon.ok   { background: var(--green-bg); }
+  .summary-icon.warn { background: var(--amber-bg); }
+  .summary-icon.bad  { background: var(--red-bg); }
+
+  .summary-text { flex: 1; }
+  .summary-headline { font-size: 15px; font-weight: 500; color: var(--text); }
+  .summary-detail { font-size: 13px; color: var(--text3); margin-top: 2px; }
+
+  /* holiday pill */
+  .holiday-note {
+    background: var(--amber-bg);
+    border: 1px solid #E8D0A0;
+    border-radius: var(--radius-sm);
+    padding: 10px 16px;
+    font-size: 12px;
+    color: var(--amber);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  @media (max-width: 640px) {
+    .meta-cards, .stefani-row, .needed-grid { grid-template-columns: 1fr; }
+    .input-grid { grid-template-columns: 1fr; }
+    .input-row-bottom { grid-template-columns: 1fr; }
+    .rhythm-grid { grid-template-columns: repeat(4, 1fr); }
+    header { padding: 0 16px; }
+    .main { padding: 20px 16px 40px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Use <span>Marine</span></div>
+  <div class="header-right">
+    <span class="month-badge">Metas · Maio 2026</span>
+  </div>
+</header>
+
+<div class="main">
+
+  <div>
+    <div class="page-title">Painel de Metas — Maio</div>
+    <div class="page-sub">Acompanhamento diário · Atualizado manualmente · 31 dias no mês</div>
+  </div>
+
+  <!-- INPUT PANEL -->
+  <div class="input-panel">
+    <div class="panel-header">✦ Atualizar valores de hoje</div>
+    <div class="input-grid">
+      <div class="input-cell">
+        <label>Receita Geral do Site Acumulada (R$)</label>
+        <input type="number" id="inputGeral" placeholder="0" min="0" step="100" oninput="calcular()">
+        <div class="hint">Total da loja até hoje</div>
+      </div>
+      <div class="input-cell">
+        <label>Pedidos do Site Acumulados</label>
+        <input type="number" id="inputPedidosGeral" placeholder="0" min="0" step="1" oninput="calcular()">
+        <div class="hint">Nº total de pedidos do site</div>
+      </div>
+      <div class="input-cell">
+        <label>Feriados restantes (dias úteis perdidos)</label>
+        <input type="number" id="inputFeriados" placeholder="0" min="0" max="15" step="1" value="0" oninput="calcular()">
+        <div class="hint">Dias úteis que serão cortados</div>
+      </div>
+    </div>
+    <div class="input-grid" style="border-top:1px solid var(--border);">
+      <div class="input-cell">
+        <label>Atendimento Stéfani Acumulado (R$)</label>
+        <input type="number" id="inputStefani" placeholder="0" min="0" step="100" oninput="calcular()">
+        <div class="hint">Vendas pelo link/cupom dela</div>
+      </div>
+      <div class="input-cell">
+        <label>Pedidos Stéfani Acumulados</label>
+        <input type="number" id="inputPedidosStefani" placeholder="0" min="0" step="1" oninput="calcular()">
+        <div class="hint">Nº de pedidos pelo atendimento</div>
+      </div>
+      <div class="input-cell">
+        <label>Ticket Médio Stéfani</label>
+        <div style="font-size:20px; font-weight:500; padding-top:2px;" id="ticketStefaniDisplay">—</div>
+        <div class="hint">Calculado automaticamente</div>
+      </div>
+    </div>
+    <div class="input-row-bottom">
+      <div class="input-cell" style="border-top:1px solid var(--border);">
+        <label>Dia atual</label>
+        <div class="day-selector">
+          <button onclick="mudaDia(-1)">−</button>
+          <span class="day-num" id="diaNum">1</span>
+          <button onclick="mudaDia(1)">+</button>
+          <span class="day-name" id="diaNome"></span>
+        </div>
+        <div class="hint" style="margin-top:8px;">Ticket médio site: <strong id="ticketGeralDisplay">—</strong></div>
+      </div>
+      <div class="input-cell" style="border-top:1px solid var(--border); border-right:1px solid var(--border);">
+        <label>Dias úteis restantes (Stéfani)</label>
+        <div style="font-size:20px; font-weight:500;" id="diasUteisRestantes">—</div>
+        <div class="hint">Seg–Sáb · Dia 1 (feriado) já descontado</div>
+      </div>
+      <button class="btn-update" onclick="salvarEAtualizar()">Salvar e atualizar ↩</button>
+    </div>
+  </div>
+
+  <!-- AI PASTE PANEL -->
+  <div class="input-panel" id="aiPanel">
+    <div class="panel-header" style="justify-content:space-between; cursor:pointer;" onclick="toggleAiPanel()">
+      <span>✦ Preencher via IA — cole os dados e eu preencho</span>
+      <span id="aiPanelToggle" style="font-size:18px; color:var(--text3);">▾</span>
+    </div>
+    <div id="aiPanelBody">
+      <div style="padding:16px 20px; border-bottom:1px solid var(--border);">
+        <div class="input-grid" style="grid-template-columns:1fr auto; gap:12px; align-items:start;">
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);margin-bottom:8px;">Chave API Anthropic</label>
+            <input type="password" id="aiApiKey" placeholder="sk-ant-..." style="width:100%;font-family:'DM Sans',monospace;font-size:14px;padding:9px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);outline:none;" oninput="saveApiKey()">
+            <div style="font-size:11px;color:var(--text3);margin-top:4px;">Salva localmente no navegador · nunca enviada a terceiros</div>
+          </div>
+          <div id="apiDot" style="width:10px;height:10px;border-radius:50%;background:var(--border2);margin-top:28px;flex-shrink:0;"></div>
+        </div>
+      </div>
+      <div style="padding:16px 20px; border-bottom:1px solid var(--border);">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+          <div>
+            <div style="font-size:13px;font-weight:500;color:var(--text);">📊 Planilha Google Sheets conectada</div>
+            <div style="font-size:11px;color:var(--text3);margin-top:2px;">Os dados são lidos direto da planilha — atualize lá e clique em Carregar</div>
+          </div>
+          <button onclick="carregarDoCSV()" style="padding:9px 18px;background:var(--text);color:#fff;border:none;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:6px;" id="btnCarregar">
+            <span id="csvSpinner" style="display:none;width:12px;height:12px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;"></span>
+            ↓ Carregar da planilha
+          </button>
+        </div>
+        <div style="font-size:12px;margin-top:10px;" id="sheetsStatus"></div>
+      </div>
+      <div style="padding:16px 20px; border-bottom:1px solid var(--border);">
+        <label style="display:block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);margin-bottom:8px;">Cole aqui os dados do dia</label>
+        <textarea id="aiPasteInput" placeholder="Cole qualquer formato:&#10;• Receita geral: R$ 12.450,00&#10;• Pedidos: 87&#10;• Atendimento Stéfani: R$ 3.200,00&#10;• Pedidos Stéfani: 22&#10;• Dia: 7&#10;&#10;Pode ser texto copiado da planilha, WhatsApp, relatório — a IA entende." style="width:100%;min-height:120px;font-family:'DM Sans',sans-serif;font-size:13px;line-height:1.6;padding:12px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);outline:none;resize:vertical;"></textarea>
+      </div>
+      <div style="padding:14px 20px;display:flex;align-items:center;gap:12px;">
+        <button onclick="preencherViaIA()" id="btnIA" style="padding:10px 22px;background:var(--text);color:#fff;border:none;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:8px;transition:background .15s;">
+          <span id="iaSpinner" style="display:none;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;"></span>
+          <span id="iaBtnText">✦ Preencher automaticamente</span>
+        </button>
+        <span id="aiStatus" style="font-size:13px;color:var(--text3);"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- GENERAL META CARDS -->
+  <div class="section-title">Metas Gerais do Site</div>
+  <div class="meta-cards" id="metaCardsGeral"></div>
+
+  <!-- NEEDED PER DAY CARD -->
+  <div class="rhythm-card">
+    <div class="panel-header">📅 Necessário por dia restante para atingir cada meta</div>
+    <div class="needed-grid" id="neededGrid"></div>
+  </div>
+
+  <!-- STEFANI SECTION -->
+  <div class="section-title">Atendimento Online · Stéfani</div>
+  <div class="stefani-row" id="stefaniCards"></div>
+
+  <!-- SUMMARY -->
+  <div class="summary-band" id="summaryBand">
+    <div class="summary-icon ok" id="summaryIcon">📊</div>
+    <div class="summary-text">
+      <div class="summary-headline" id="summaryHeadline">Informe os valores acima para ver o status.</div>
+      <div class="summary-detail" id="summaryDetail">Atualizado em —</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── Constantes ─────────────────────────────────────────────────
+const METAS_GERAL = [
+  { tier: 'bronze', label: '🥉 Bronze', target: 50000, commission: 0.025, commLabel: '2,5%', bonus: 100 },
+  { tier: 'silver', label: '🥈 Prata',  target: 55000, commission: 0.0275, commLabel: '2,75%', bonus: 150 },
+  { tier: 'gold',   label: '🥇 Ouro',   target: 60000, commission: 0.03, commLabel: '3,0%', bonus: 200 },
+];
+
+const STEFANI_RATIO = 0.30; // 30% do geral
+
+const DIAS_MAIO = 31;
+
+// Dias de semana de maio 2026 (1=sex, 2=sáb, 3=dom, ...)
+// Maio 2026 começa numa SEXTA-FEIRA
+const DIA_SEMANA_INICIO = 5; // 0=dom,1=seg,2=ter,3=qua,4=qui,5=sex,6=sáb
+
+const NOMES_DIA = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+const NOMES_DIA_FULL = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+
+// Estado
+let diaAtual = new Date().getDate();
+// Se não estamos em maio 2026, default para dia 1
+const hoje = new Date();
+if (hoje.getMonth() !== 4 || hoje.getFullYear() !== 2026) diaAtual = 1;
+if (diaAtual > 31) diaAtual = 31;
+
+function getDiaSemana(dia) {
+  // dia: 1..31, maio 2026 começa na sexta (5)
+  return (DIA_SEMANA_INICIO - 1 + dia) % 7; // 0=dom
+}
+
+// Feriados fixos de maio 2026
+const FERIADOS_FIXOS = [1]; // 1º de maio — Dia do Trabalho
+
+function isFeriadoFixo(dia) {
+  return FERIADOS_FIXOS.includes(dia);
+}
+
+function isUtilStefani(dia) {
+  const ds = getDiaSemana(dia);
+  return ds >= 1 && ds <= 6 && !isFeriadoFixo(dia); // seg a sáb, sem feriados fixos
+}
+
+function contarDiasUteisStefaniRestantes(diaAtual, feriadosExtraDesc) {
+  let count = 0;
+  for (let d = diaAtual; d <= DIAS_MAIO; d++) {
+    if (isUtilStefani(d)) count++;
+  }
+  return Math.max(0, count - feriadosExtraDesc);
+}
+
+function contarDiasRestantesGeral(diaAtual) {
+  // Todos os dias restantes incluindo hoje
+  return DIAS_MAIO - diaAtual + 1;
+}
+
+function fmt(v) {
+  return 'R$ ' + v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function fmtK(v) {
+  if (v >= 1000) return 'R$ ' + (v/1000).toFixed(1).replace('.', ',') + 'k';
+  return fmt(v);
+}
+
+function pct(parte, total) {
+  if (!total) return 0;
+  return Math.min(100, Math.round((parte / total) * 100));
+}
+
+function mudaDia(delta) {
+  diaAtual = Math.max(1, Math.min(31, diaAtual + delta));
+  saveState();
+  calcular();
+}
+
+function calcular() {
+  const geral = parseFloat(document.getElementById('inputGeral').value) || 0;
+  const stefani = parseFloat(document.getElementById('inputStefani').value) || 0;
+  const feriados = parseInt(document.getElementById('inputFeriados').value) || 0;
+  const pedidosGeral = parseInt(document.getElementById('inputPedidosGeral').value) || 0;
+  const pedidosStefani = parseInt(document.getElementById('inputPedidosStefani').value) || 0;
+
+  const ticketGeral = pedidosGeral > 0 ? geral / pedidosGeral : 0;
+  const ticketStefani = pedidosStefani > 0 ? stefani / pedidosStefani : 0;
+
+  document.getElementById('diaNum').textContent = diaAtual;
+  const ds = getDiaSemana(diaAtual);
+  document.getElementById('diaNome').textContent = NOMES_DIA_FULL[ds];
+
+  document.getElementById('ticketGeralDisplay').textContent = ticketGeral > 0 ? fmt(ticketGeral) : '—';
+  document.getElementById('ticketStefaniDisplay').textContent = ticketStefani > 0 ? fmt(ticketStefani) : '—';
+
+  const diasRestantesGeral = contarDiasRestantesGeral(diaAtual);
+  const diasUteisRestantesStefani = contarDiasUteisStefaniRestantes(diaAtual, feriados);
+
+  document.getElementById('diasUteisRestantes').textContent = diasUteisRestantesStefani + ' dias úteis';
+
+  renderMetaCardsGeral(geral, diasRestantesGeral, ticketGeral, pedidosGeral);
+  renderNeededGrid(geral, diasRestantesGeral);
+  renderStefaniCards(stefani, diasUteisRestantesStefani, geral, ticketStefani, pedidosStefani);
+  renderSummary(geral, stefani, diasRestantesGeral, diasUteisRestantesStefani);
+}
+
+function renderMetaCardsGeral(geral, diasRestantes, ticketGeral, pedidosGeral) {
+  const container = document.getElementById('metaCardsGeral');
+  container.innerHTML = METAS_GERAL.map(m => {
+    const falta = Math.max(0, m.target - geral);
+    const progresso = pct(geral, m.target);
+    const comissaoAtual = geral >= m.target ? geral * m.commission : 0;
+    const comissaoMeta = m.target * m.commission;
+    const atingiu = geral >= m.target;
+    const necessarioPorDia = diasRestantes > 0 ? falta / diasRestantes : 0;
+    const noRhythm = necessarioPorDia > 0 && (geral / (31 - diasRestantes || 1)) >= necessarioPorDia * 0.85;
+
+    let badgeClass = 'badge-warn', badgeText = '⏳ Em andamento';
+    if (atingiu) { badgeClass = 'badge-done'; badgeText = '✓ Atingida!'; }
+    else if (progresso >= 70) { badgeClass = 'badge-ok'; badgeText = '↑ No ritmo'; }
+    else if (progresso < 40 && diasRestantes < 15) { badgeClass = 'badge-no'; badgeText = '↓ Em risco'; }
+
+    return `
+    <div class="meta-card ${m.tier}">
+      <div class="meta-top">
+        <div class="meta-tier">
+          <span class="tier-label">${m.label}</span>
+          <span class="tier-pct">${progresso}%</span>
+        </div>
+        <div class="meta-target">${fmtK(m.target)}</div>
+        <div class="meta-commission">Comissão ${m.commLabel} → ${fmt(comissaoMeta)}</div>
+        <div style="display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:5px 10px;border-radius:20px;background:var(--bg2);border:1px solid var(--border2);">
+          <span style="font-size:14px;">🎁</span>
+          <span style="font-size:12px;font-weight:700;color:var(--text);">Bônus: ${fmt(m.bonus)}</span>
+        </div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" style="width:${progresso}%"></div>
+        </div>
+        <div class="progress-labels">
+          <span>${fmt(geral)} acumulado</span>
+          <span>${fmt(falta)} restante</span>
+        </div>
+      </div>
+      <div class="meta-stats">
+        <div class="stat-row">
+          <span class="stat-label">Ticket médio</span>
+          <span class="stat-value">${ticketGeral > 0 ? fmt(ticketGeral) + ' · ' + pedidosGeral + ' ped.' : '—'}</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Falta</span>
+          <span class="stat-value ${atingiu ? 'good' : ''}">${atingiu ? '✓ Atingida' : fmt(falta)}</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Meta/dia restante</span>
+          <span class="stat-value ${atingiu ? 'good' : 'warn'}">${atingiu ? '—' : fmtK(necessarioPorDia)}</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Comissão + bônus</span>
+          <span class="stat-value ${atingiu ? 'good' : 'neutral'}">${atingiu ? fmt(comissaoAtual) + ' + ' + fmt(m.bonus) + ' = <strong>' + fmt(comissaoAtual + m.bonus) + '</strong>' : fmt(comissaoMeta) + ' + ' + fmt(m.bonus) + ' = ' + fmt(comissaoMeta + m.bonus)}</span>
+        </div>
+        <span class="on-track-badge ${badgeClass}">${badgeText}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderNeededGrid(geral, diasRestantes) {
+  const container = document.getElementById('neededGrid');
+  container.innerHTML = METAS_GERAL.map(m => {
+    const falta = Math.max(0, m.target - geral);
+    const porDia = diasRestantes > 0 ? falta / diasRestantes : 0;
+    const atingiu = geral >= m.target;
+    return `
+    <div class="needed-cell ${m.tier}">
+      <div class="needed-label">${m.label.replace(/🥉|🥈|🥇/g,'').trim()}</div>
+      <div class="needed-value">${atingiu ? '✓' : fmtK(porDia)}</div>
+      <div class="needed-sub">${atingiu ? 'Meta atingida!' : `por dia · ${diasRestantes} dias restantes`}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderStefaniCards(stefani, diasUteisRestantes, geral, ticketStefani, pedidosStefani) {
+  const container = document.getElementById('stefaniCards');
+  container.innerHTML = METAS_GERAL.map(m => {
+    const metaStefani = m.target * STEFANI_RATIO;
+    const falta = Math.max(0, metaStefani - stefani);
+    const progresso = pct(stefani, metaStefani);
+    const atingiu = stefani >= metaStefani;
+    const porDia = diasUteisRestantes > 0 ? falta / diasUteisRestantes : 0;
+
+    let badgeClass = 'badge-warn', badgeText = '⏳ Em andamento';
+    if (atingiu) { badgeClass = 'badge-done'; badgeText = '✓ Atingida!'; }
+    else if (progresso >= 70) { badgeClass = 'badge-ok'; badgeText = '↑ No ritmo'; }
+    else if (progresso < 35 && diasUteisRestantes < 10) { badgeClass = 'badge-no'; badgeText = '↓ Em risco'; }
+
+    return `
+    <div class="stefani-card ${m.tier}">
+      <div class="stefani-header">
+        <span class="stefani-name">Stéfani</span>
+        <span class="stefani-tier ${m.tier}">${m.label.replace(/🥉|🥈|🥇/g,'').trim()}</span>
+      </div>
+      <div class="stefani-target">${fmtK(metaStefani)}</div>
+      <div class="stefani-sub">30% de ${fmtK(m.target)} · ${m.commLabel}</div>
+      <div class="stefani-progress-bg">
+        <div class="stefani-progress-fill" style="width:${progresso}%"></div>
+      </div>
+      <div class="stefani-stats">
+        <div class="stat-row">
+          <span class="stat-label">Acumulado</span>
+          <span class="stat-value">${fmt(stefani)}</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Ticket médio</span>
+          <span class="stat-value">${ticketStefani > 0 ? fmt(ticketStefani) + ' · ' + pedidosStefani + ' ped.' : '—'}</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Falta</span>
+          <span class="stat-value ${atingiu ? 'good' : ''}">${atingiu ? '✓' : fmt(falta)}</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Por dia útil</span>
+          <span class="stat-value ${atingiu ? 'good' : 'warn'}">${atingiu ? '—' : fmtK(porDia)}</span>
+        </div>
+        <span class="on-track-badge ${badgeClass}" style="margin-top:4px">${badgeText}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderSummary(geral, stefani, diasRestantes, diasUteisRestantes) {
+  const bronzeTarget = METAS_GERAL[0].target;
+  const progBronze = pct(geral, bronzeTarget);
+  const faltaBronze = Math.max(0, bronzeTarget - geral);
+  const porDiaBronze = diasRestantes > 0 ? faltaBronze / diasRestantes : 0;
+
+  const icon = document.getElementById('summaryIcon');
+  const headline = document.getElementById('summaryHeadline');
+  const detail = document.getElementById('summaryDetail');
+
+  const atingiuOuro = geral >= 60000;
+  const atingiuPrata = geral >= 55000;
+  const atingiuBronze = geral >= 50000;
+
+  let iconEmoji = '📊', iconClass = 'ok', headlineText = '', detailText = '';
+
+  if (atingiuOuro) {
+    iconEmoji = '🥇'; iconClass = 'ok';
+    headlineText = 'Meta Ouro atingida! Parabéns à equipe.';
+    detailText = `Receita: ${fmt(geral)} · Comissão: ${fmt(geral * 0.03)} + bônus ${fmt(200)} = ${fmt(geral * 0.03 + 200)}`;
+  } else if (atingiuPrata) {
+    iconEmoji = '🥈'; iconClass = 'ok';
+    headlineText = `Meta Prata atingida! Faltam ${fmt(60000 - geral)} para o Ouro.`;
+    detailText = `${diasRestantes} dias restantes para chegar ao Ouro · ${fmtK((60000 - geral) / diasRestantes)}/dia`;
+  } else if (atingiuBronze) {
+    iconEmoji = '🥉'; iconClass = 'ok';
+    headlineText = `Meta Bronze atingida! Faltam ${fmt(55000 - geral)} para a Prata.`;
+    detailText = `${diasRestantes} dias restantes para chegar à Prata · ${fmtK((55000 - geral) / diasRestantes)}/dia`;
+  } else if (progBronze >= 60) {
+    iconEmoji = '⏳'; iconClass = 'warn';
+    headlineText = `${progBronze}% do Bronze. Mantenha o ritmo!`;
+    detailText = `Faltam ${fmt(faltaBronze)} · Necessário: ${fmtK(porDiaBronze)}/dia nos próximos ${diasRestantes} dias`;
+  } else {
+    iconEmoji = '⚠️'; iconClass = 'bad';
+    headlineText = `Atenção: ${progBronze}% do Bronze acumulado.`;
+    detailText = `Faltam ${fmt(faltaBronze)} · Necessário: ${fmtK(porDiaBronze)}/dia nos ${diasRestantes} dias restantes`;
+  }
+
+  icon.textContent = iconEmoji;
+  icon.className = `summary-icon ${iconClass}`;
+  headline.textContent = headlineText || 'Informe os valores para ver o status.';
+  detail.textContent = detailText || 'Preencha os campos acima e clique em Atualizar.';
+}
+
+// ── localStorage ─────────────────────────────────────────────
+const STORAGE_KEY = 'usemarine_metas_maio2026';
+
+function getState() {
+  return {
+    dia:            diaAtual,
+    receita_geral:   parseFloat(document.getElementById('inputGeral').value) || 0,
+    pedidos_geral:   parseInt(document.getElementById('inputPedidosGeral').value) || 0,
+    receita_stefani: parseFloat(document.getElementById('inputStefani').value) || 0,
+    pedidos_stefani: parseInt(document.getElementById('inputPedidosStefani').value) || 0,
+    feriados:        parseInt(document.getElementById('inputFeriados').value) || 0
+  };
+}
+
+function applyState(s) {
+  if (s.receita_geral   != null) document.getElementById('inputGeral').value = s.receita_geral;
+  if (s.pedidos_geral   != null) document.getElementById('inputPedidosGeral').value = s.pedidos_geral;
+  if (s.receita_stefani != null) document.getElementById('inputStefani').value = s.receita_stefani;
+  if (s.pedidos_stefani != null) document.getElementById('inputPedidosStefani').value = s.pedidos_stefani;
+  if (s.feriados        != null) document.getElementById('inputFeriados').value = s.feriados;
+  if (s.dia             != null) diaAtual = Math.max(1, Math.min(31, parseInt(s.dia)));
+}
+
+function saveState() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(getState())); } catch(e) {}
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    applyState(JSON.parse(raw));
+  } catch(e) {}
+}
+
+function saveApiKey() {
+  const key = document.getElementById('aiApiKey').value.trim();
+  try { if (key) localStorage.setItem('usemarine_apikey', key); } catch(e) {}
+  updateApiDot(key);
+}
+
+function loadApiKey() {
+  try {
+    const key = localStorage.getItem('usemarine_apikey') || '';
+    if (key) { document.getElementById('aiApiKey').value = key; updateApiDot(key); }
+  } catch(e) {}
+}
+
+function updateApiDot(key) {
+  const dot = document.getElementById('apiDot');
+  dot.style.background = key.startsWith('sk-ant-') ? 'var(--green)' : 'var(--border2)';
+}
+
+function saveSheetsUrl() {}
+function loadSheetsUrl() {}
+
+// ── Google Sheets CSV sync ────────────────────────────────────
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTtH3DdYyP3ZXFi_sQ0ANU2H8dC7rIl6Be3kHREjzutPS3t9XCae78v6PNLae5KgQd3PCARpBymRD2N/pub?gid=1822139092&single=true&output=csv";
+
+async function carregarDoCSV() {
+  const status = document.getElementById('sheetsStatus');
+  const spinner = document.getElementById('csvSpinner');
+  const btn = document.getElementById('btnCarregar');
+
+  spinner.style.display = 'block';
+  btn.disabled = true;
+  status.textContent = '';
+  status.style.color = 'var(--text3)';
+
+  try {
+    // Adiciona timestamp para evitar cache
+    const resp = await fetch(CSV_URL + '&t=' + Date.now());
+    if (!resp.ok) throw new Error('Erro HTTP ' + resp.status);
+    const text = await resp.text();
+    const lines = text.trim().split('\n').map(l => l.split(',').map(v => v.trim().replace(/^"|"$/g, '')));
+
+    if (lines.length < 2) throw new Error('Planilha sem dados');
+
+    // Mapeia cabeçalho
+    const headers = lines[0].map(h => h.toLowerCase().trim());
+    const dataLine = lines[lines.length - 1]; // pega a última linha
+
+    function val(key) {
+      const idx = headers.indexOf(key);
+      return idx >= 0 ? dataLine[idx] : null;
+    }
+
+    const state = {
+      dia:             parseInt(val('dia')) || null,
+      receita_geral:   parseFloat((val('receita_geral') || '').replace(',', '.')) || null,
+      pedidos_geral:   parseInt(val('pedidos_geral')) || null,
+      receita_stefani: parseFloat((val('receita_stefani') || '').replace(',', '.')) || null,
+      pedidos_stefani: parseInt(val('pedidos_stefani')) || null,
+      feriados:        parseInt(val('feriados')) || null,
+      atualizado_em:   val('atualizado_em') || null
+    };
+
+    applyState(state);
+    saveState();
+    calcular();
+
+    const hora = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    status.textContent = '✓ Dados carregados às ' + hora + (state.atualizado_em ? ' · Planilha: ' + state.atualizado_em : '');
+    status.style.color = 'var(--green)';
+
+  } catch(err) {
+    status.textContent = '✖ Erro: ' + err.message;
+    status.style.color = 'var(--red)';
+  } finally {
+    spinner.style.display = 'none';
+    btn.disabled = false;
+  }
+}
+
+// Mantém salvarNoSheets como stub (salvar é feito direto na planilha)
+function salvarNoSheets() {}
+
+// Hook all inputs to also save state locally
+document.addEventListener('DOMContentLoaded', () => {
+  ['inputGeral','inputPedidosGeral','inputStefani','inputPedidosStefani','inputFeriados'].forEach(id => {
+    document.getElementById(id).addEventListener('input', saveState);
+  });
+});
+
+// ── AI Panel toggle ───────────────────────────────────────────
+function toggleAiPanel() {
+  const body = document.getElementById('aiPanelBody');
+  const arrow = document.getElementById('aiPanelToggle');
+  const hidden = body.style.display === 'none';
+  body.style.display = hidden ? 'block' : 'none';
+  arrow.textContent = hidden ? '▾' : '▸';
+}
+
+// ── AI fill ───────────────────────────────────────────────────
+async function preencherViaIA() {
+  const apiKey = document.getElementById('aiApiKey').value.trim();
+  const texto = document.getElementById('aiPasteInput').value.trim();
+  const btn = document.getElementById('btnIA');
+  const status = document.getElementById('aiStatus');
+
+  if (!apiKey || !apiKey.startsWith('sk-ant-')) {
+    status.textContent = '⚠ Informe a chave API Anthropic acima.';
+    status.style.color = 'var(--amber)';
+    return;
+  }
+  if (!texto) {
+    status.textContent = '⚠ Cole os dados antes de preencher.';
+    status.style.color = 'var(--amber)';
+    return;
+  }
+
+  document.getElementById('iaSpinner').style.display = 'block';
+  document.getElementById('iaBtnText').textContent = 'Processando...';
+  btn.disabled = true;
+  status.textContent = '';
+
+  const systemPrompt = `Você extrai dados de e-commerce de textos em qualquer formato e retorna SOMENTE um JSON válido, sem markdown, sem explicações.
+
+Campos obrigatórios (use null se não encontrar):
+{
+  "receita_geral": número ou null,
+  "pedidos_geral": número inteiro ou null,
+  "receita_stefani": número ou null,
+  "pedidos_stefani": número inteiro ou null,
+  "dia": número inteiro 1-31 ou null,
+  "feriados": número inteiro ou null
+}
+
+Regras:
+- Valores monetários: extraia apenas o número (ex: "R$ 12.450,00" → 12450)
+- Ignore separadores de milhar e converta vírgula decimal para ponto
+- Se o texto mencionar "atendimento", "Stéfani", "link", "cupom" — é receita_stefani
+- "Dia X" ou "dia atual: X" → campo dia
+- Retorne SOMENTE o JSON, sem mais nada`;
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 300,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: texto }]
+      })
+    });
+
+    if (!resp.ok) {
+      const err = await resp.json().catch(() => ({}));
+      throw new Error(err.error?.message || 'Erro HTTP ' + resp.status);
+    }
+
+    const data = await resp.json();
+    const raw = (data.content[0]?.text || '').replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(raw);
+
+    let filled = 0;
+    if (parsed.receita_geral != null) { document.getElementById('inputGeral').value = parsed.receita_geral; filled++; }
+    if (parsed.pedidos_geral != null) { document.getElementById('inputPedidosGeral').value = parsed.pedidos_geral; filled++; }
+    if (parsed.receita_stefani != null) { document.getElementById('inputStefani').value = parsed.receita_stefani; filled++; }
+    if (parsed.pedidos_stefani != null) { document.getElementById('inputPedidosStefani').value = parsed.pedidos_stefani; filled++; }
+    if (parsed.feriados != null) { document.getElementById('inputFeriados').value = parsed.feriados; filled++; }
+    if (parsed.dia != null) { diaAtual = Math.max(1, Math.min(31, parseInt(parsed.dia))); }
+
+    saveState();
+    calcular();
+    document.getElementById('aiPasteInput').value = '';
+
+    status.textContent = '✓ ' + filled + ' campo(s) preenchido(s). Atualize a planilha para salvar.';
+    status.style.color = 'var(--green)';
+
+  } catch(err) {
+    status.textContent = '✖ Erro: ' + err.message;
+    status.style.color = 'var(--red)';
+  } finally {
+    document.getElementById('iaSpinner').style.display = 'none';
+    document.getElementById('iaBtnText').textContent = '✦ Preencher automaticamente';
+    btn.disabled = false;
+  }
+}
+
+// ── Save + update button ─────────────────────────────────────
+function salvarEAtualizar() {
+  saveState();
+  calcular();
+}
+
+// ── Init ──────────────────────────────────────────────────────
+loadState();
+loadApiKey();
+loadSheetsUrl();
+calcular();
+</script>
+</body>
+</html>
