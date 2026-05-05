@@ -926,6 +926,10 @@ function renderStefaniCards(stefani, diasUteisRestantes, geral, ticketStefani, p
     const progresso = pct(stefani, metaStefani);
     const atingiu = stefani >= metaStefani;
     const porDia = diasUteisRestantes > 0 ? falta / diasUteisRestantes : 0;
+    const comissaoMeta = metaStefani * m.commission;
+    const comissaoAtual = atingiu ? stefani * m.commission : 0;
+    const totalMeta = comissaoMeta + m.bonus;
+    const totalAtual = comissaoAtual + m.bonus;
 
     let badgeClass = 'badge-warn', badgeText = '⏳ Em andamento';
     if (atingiu) { badgeClass = 'badge-done'; badgeText = '✓ Atingida!'; }
@@ -940,7 +944,11 @@ function renderStefaniCards(stefani, diasUteisRestantes, geral, ticketStefani, p
       </div>
       <div class="stefani-target">${fmtK(metaStefani)}</div>
       <div class="stefani-sub">30% de ${fmtK(m.target)} · ${m.commLabel}</div>
-      <div class="stefani-progress-bg">
+      <div style="display:inline-flex;align-items:center;gap:6px;margin-top:6px;padding:5px 10px;border-radius:20px;background:var(--bg2);border:1px solid var(--border2);">
+        <span style="font-size:14px;">🎁</span>
+        <span style="font-size:12px;font-weight:700;color:var(--text);">Bônus: ${fmt(m.bonus)}</span>
+      </div>
+      <div class="stefani-progress-bg" style="margin-top:10px;">
         <div class="stefani-progress-fill" style="width:${progresso}%"></div>
       </div>
       <div class="stefani-stats">
@@ -959,6 +967,14 @@ function renderStefaniCards(stefani, diasUteisRestantes, geral, ticketStefani, p
         <div class="stat-row">
           <span class="stat-label">Por dia útil</span>
           <span class="stat-value ${atingiu ? 'good' : 'warn'}">${atingiu ? '—' : fmtK(porDia)}</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Comissão ${m.commLabel}</span>
+          <span class="stat-value">${atingiu ? fmt(comissaoAtual) : fmt(comissaoMeta)}</span>
+        </div>
+        <div class="stat-row" style="border-top:1px solid var(--border);margin-top:4px;padding-top:8px;">
+          <span class="stat-label" style="font-weight:600;color:var(--text);">Total com bônus</span>
+          <span class="stat-value ${atingiu ? 'good' : ''}" style="font-weight:600;">${atingiu ? fmt(totalAtual) : fmt(totalMeta)}</span>
         </div>
         <span class="on-track-badge ${badgeClass}" style="margin-top:4px">${badgeText}</span>
       </div>
