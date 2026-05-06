@@ -668,6 +668,30 @@
     </div>
   </div>
 
+  <!-- TICKET MEDIO STRIP -->
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0;overflow:hidden;">
+    <div style="padding:16px 20px;border-right:1px solid var(--border);">
+      <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);margin-bottom:6px;">Ticket Médio Geral</div>
+      <div style="font-family:'DM Serif Display',serif;font-size:24px;color:var(--text);letter-spacing:-0.02em;" id="tmGeralStrip">—</div>
+      <div style="font-size:11px;color:var(--text3);margin-top:2px;" id="tmGeralPedidos">— pedidos</div>
+    </div>
+    <div style="padding:16px 20px;border-right:1px solid var(--border);">
+      <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);margin-bottom:6px;">Ticket Médio Stéfani</div>
+      <div style="font-family:'DM Serif Display',serif;font-size:24px;color:var(--text);letter-spacing:-0.02em;" id="tmStefaniStrip">—</div>
+      <div style="font-size:11px;color:var(--text3);margin-top:2px;" id="tmStefaniPedidos">— pedidos</div>
+    </div>
+    <div style="padding:16px 20px;border-right:1px solid var(--border);">
+      <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);margin-bottom:6px;">Receita Geral</div>
+      <div style="font-family:'DM Serif Display',serif;font-size:24px;color:var(--text);letter-spacing:-0.02em;" id="receitaGeralStrip">—</div>
+      <div style="font-size:11px;color:var(--text3);margin-top:2px;" id="diaAtualStrip">Dia —</div>
+    </div>
+    <div style="padding:16px 20px;">
+      <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);margin-bottom:6px;">Atendimento Stéfani</div>
+      <div style="font-family:'DM Serif Display',serif;font-size:24px;color:var(--text);letter-spacing:-0.02em;" id="receitaStefaniStrip">—</div>
+      <div style="font-size:11px;color:var(--text3);margin-top:2px;" id="pctStefaniStrip">—% do geral</div>
+    </div>
+  </div>
+
   <!-- AI PASTE PANEL -->
   <div class="input-panel" id="aiPanel">
     <div class="panel-header" style="justify-content:space-between; cursor:pointer;" onclick="toggleAiPanel()">
@@ -829,6 +853,16 @@ function calcular() {
 
   document.getElementById('ticketGeralDisplay').textContent = ticketGeral > 0 ? fmt(ticketGeral) : '—';
   document.getElementById('ticketStefaniDisplay').textContent = ticketStefani > 0 ? fmt(ticketStefani) : '—';
+
+  // Summary strip
+  document.getElementById('tmGeralStrip').textContent = ticketGeral > 0 ? fmt(ticketGeral) : '—';
+  document.getElementById('tmGeralPedidos').textContent = pedidosGeral > 0 ? pedidosGeral + ' pedidos' : '— pedidos';
+  document.getElementById('tmStefaniStrip').textContent = ticketStefani > 0 ? fmt(ticketStefani) : '—';
+  document.getElementById('tmStefaniPedidos').textContent = pedidosStefani > 0 ? pedidosStefani + ' pedidos' : '— pedidos';
+  document.getElementById('receitaGeralStrip').textContent = geral > 0 ? fmt(geral) : '—';
+  document.getElementById('diaAtualStrip').textContent = 'Dia ' + diaAtual;
+  document.getElementById('receitaStefaniStrip').textContent = stefani > 0 ? fmt(stefani) : '—';
+  document.getElementById('pctStefaniStrip').textContent = geral > 0 && stefani > 0 ? ((stefani/geral)*100).toFixed(1) + '% do geral' : '—% do geral';
 
   const diasRestantesGeral = contarDiasRestantesGeral(diaAtual);
   const diasUteisRestantesStefani = contarDiasUteisStefaniRestantes(diaAtual, feriados);
