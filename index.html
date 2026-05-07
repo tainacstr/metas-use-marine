@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <title>Metas Maio 2026 — Use Marine</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Serif+Display:ital@0;1&display=swap');
@@ -750,6 +751,24 @@
   <div class="section-title">Atendimento Online · Stéfani</div>
   <div class="stefani-row" id="stefaniCards"></div>
 
+  <!-- TENDENCIA CHART -->
+  <div class="section-title">Evolução Diária — Maio 2026</div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;">
+    <div style="padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+      <span style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);">📈 Tendência acumulada</span>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button onclick="setChart('receita')" id="btnChartReceita" style="padding:5px 12px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;border-radius:20px;cursor:pointer;border:1px solid var(--text);background:var(--text);color:#fff;">Receita</button>
+        <button onclick="setChart('stefani')" id="btnChartStefani" style="padding:5px 12px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;border-radius:20px;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--text2);">Stéfani</button>
+        <button onclick="setChart('ticket')" id="btnChartTicket" style="padding:5px 12px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;border-radius:20px;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--text2);">Ticket Médio</button>
+        <button onclick="setChart('pedidos')" id="btnChartPedidos" style="padding:5px 12px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;border-radius:20px;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--text2);">Pedidos</button>
+      </div>
+    </div>
+    <div style="padding:20px;position:relative;height:280px;">
+      <canvas id="tendenciaChart"></canvas>
+      <div id="chartEmpty" style="display:none;position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:13px;">Carregue os dados da planilha para ver a tendência</div>
+    </div>
+  </div>
+
   <!-- SUMMARY -->
   <div class="summary-band" id="summaryBand">
     <div class="summary-icon ok" id="summaryIcon">📊</div>
@@ -1119,6 +1138,33 @@ function loadSheetsUrl() {}
 // ── Google Sheets CSV sync ────────────────────────────────────
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTtH3DdYyP3ZXFi_sQ0ANU2H8dC7rIl6Be3kHREjzutPS3t9XCae78v6PNLae5KgQd3PCARpBymRD2N/pub?gid=1822139092&single=true&output=csv";
 
+// Histórico carregado da planilha
+let historicoData = [];
+let chartAtivo = 'receita';
+let tendenciaChartObj = null;
+
+function parseCSV(text) {
+  return text.trim().split('\n').map(line => {
+    const fields = [];
+    let cur = '', inQuotes = false;
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (ch === '"') { inQuotes = !inQuotes; }
+      else if (ch === ',' && !inQuotes) { fields.push(cur.trim()); cur = ''; }
+      else { cur += ch; }
+    }
+    fields.push(cur.trim());
+    return fields;
+  });
+}
+
+function parseBR(str) {
+  if (!str) return null;
+  const clean = str.trim().replace(/\./g, '').replace(',', '.');
+  const n = parseFloat(clean);
+  return isNaN(n) ? null : n;
+}
+
 async function carregarDoCSV() {
   const status = document.getElementById('sheetsStatus');
   const spinner = document.getElementById('csvSpinner');
@@ -1130,68 +1176,42 @@ async function carregarDoCSV() {
   status.style.color = 'var(--text3)';
 
   try {
-    // Adiciona timestamp para evitar cache
     const resp = await fetch(CSV_URL + '&t=' + Date.now());
     if (!resp.ok) throw new Error('Erro HTTP ' + resp.status);
     const text = await resp.text();
-    // Parser de CSV que respeita campos entre aspas
-    function parseCSV(text) {
-      return text.trim().split('\n').map(line => {
-        const fields = [];
-        let cur = '';
-        let inQuotes = false;
-        for (let i = 0; i < line.length; i++) {
-          const ch = line[i];
-          if (ch === '"') {
-            inQuotes = !inQuotes;
-          } else if (ch === ',' && !inQuotes) {
-            fields.push(cur.trim());
-            cur = '';
-          } else {
-            cur += ch;
-          }
-        }
-        fields.push(cur.trim());
-        return fields;
-      });
-    }
 
     const lines = parseCSV(text);
     if (lines.length < 2) throw new Error('Planilha sem dados');
 
     const headers = lines[0].map(h => h.toLowerCase().trim().replace(/^"|"$/g, ''));
-    const dataLine = lines[lines.length - 1].map(v => v.replace(/^"|"$/g, ''));
 
-    function val(key) {
-      const idx = headers.indexOf(key);
-      return idx >= 0 ? dataLine[idx] : null;
+    function rowToObj(row) {
+      const r = row.map(v => v.replace(/^"|"$/g, ''));
+      function v(key) { const i = headers.indexOf(key); return i >= 0 ? r[i] : null; }
+      return {
+        dia:             parseInt(v('dia')) || null,
+        receita_geral:   parseBR(v('receita_geral')),
+        pedidos_geral:   parseInt(v('pedidos_geral')) || null,
+        receita_stefani: parseBR(v('receita_stefani')),
+        pedidos_stefani: parseInt(v('pedidos_stefani')) || null,
+        feriados:        parseInt(v('feriados')) || null,
+        atualizado_em:   v('atualizado_em') || null
+      };
     }
 
-    // Converte formato BR (1.234,56) para número
-    function parseBR(str) {
-      if (!str) return null;
-      // Remove pontos de milhar, troca vírgula decimal por ponto
-      const clean = str.trim().replace(/\./g, '').replace(',', '.');
-      const n = parseFloat(clean);
-      return isNaN(n) ? null : n;
-    }
+    // Lê todas as linhas de dados
+    const dataRows = lines.slice(1).filter(r => r.some(c => c.trim() !== ''));
+    historicoData = dataRows.map(rowToObj).filter(r => r.dia).sort((a,b) => a.dia - b.dia);
 
-    const state = {
-      dia:             parseInt(val('dia')) || null,
-      receita_geral:   parseBR(val('receita_geral')),
-      pedidos_geral:   parseInt(val('pedidos_geral')) || null,
-      receita_stefani: parseBR(val('receita_stefani')),
-      pedidos_stefani: parseInt(val('pedidos_stefani')) || null,
-      feriados:        parseInt(val('feriados')) || null,
-      atualizado_em:   val('atualizado_em') || null
-    };
-
-    applyState(state);
+    // Aplica última linha ao painel
+    const last = historicoData[historicoData.length - 1];
+    applyState(last);
     saveState();
     calcular();
+    renderChart(chartAtivo);
 
     const hora = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-    status.textContent = '✓ Dados carregados às ' + hora + (state.atualizado_em ? ' · Planilha: ' + state.atualizado_em : '');
+    status.textContent = '✓ ' + historicoData.length + ' dia(s) carregado(s) às ' + hora;
     status.style.color = 'var(--green)';
 
   } catch(err) {
@@ -1201,6 +1221,105 @@ async function carregarDoCSV() {
     spinner.style.display = 'none';
     btn.disabled = false;
   }
+}
+
+function setChart(tipo) {
+  chartAtivo = tipo;
+  ['receita','stefani','ticket','pedidos'].forEach(t => {
+    const btn = document.getElementById('btnChart' + t.charAt(0).toUpperCase() + t.slice(1));
+    if (btn) {
+      btn.style.background = t === tipo ? 'var(--text)' : 'transparent';
+      btn.style.color = t === tipo ? '#fff' : 'var(--text2)';
+      btn.style.borderColor = t === tipo ? 'var(--text)' : 'var(--border)';
+    }
+  });
+  renderChart(tipo);
+}
+
+function renderChart(tipo) {
+  const canvas = document.getElementById('tendenciaChart');
+  const empty = document.getElementById('chartEmpty');
+
+  if (!historicoData.length) {
+    empty.style.display = 'flex';
+    canvas.style.display = 'none';
+    return;
+  }
+  empty.style.display = 'none';
+  canvas.style.display = 'block';
+
+  const labels = historicoData.map(d => 'Dia ' + d.dia);
+
+  let datasets = [];
+  const bronzeTarget = 50000, prataTarget = 55000, ouroTarget = 60000;
+
+  if (tipo === 'receita') {
+    // Linha de ritmo necessário para cada meta
+    const ritmoBronze = historicoData.map(d => parseFloat(((bronzeTarget / 31) * d.dia).toFixed(2)));
+    const ritmoOuro   = historicoData.map(d => parseFloat(((ouroTarget / 31) * d.dia).toFixed(2)));
+    datasets = [
+      { label: 'Receita Geral', data: historicoData.map(d => d.receita_geral), borderColor: '#1A1916', backgroundColor: 'rgba(26,25,22,0.08)', tension: 0.3, fill: true, pointRadius: 5, pointBackgroundColor: '#1A1916' },
+      { label: 'Ritmo Bronze', data: ritmoBronze, borderColor: '#A0522D', borderDash: [6,4], pointRadius: 0, tension: 0.1, fill: false },
+      { label: 'Ritmo Ouro',   data: ritmoOuro,   borderColor: '#8F6B1A', borderDash: [6,4], pointRadius: 0, tension: 0.1, fill: false },
+    ];
+  } else if (tipo === 'stefani') {
+    const ritmoStefani = historicoData.map(d => parseFloat(((bronzeTarget * 0.3 / 31) * d.dia).toFixed(2)));
+    datasets = [
+      { label: 'Receita Stéfani', data: historicoData.map(d => d.receita_stefani), borderColor: '#607080', backgroundColor: 'rgba(96,112,128,0.08)', tension: 0.3, fill: true, pointRadius: 5, pointBackgroundColor: '#607080' },
+      { label: 'Ritmo Bronze (30%)', data: ritmoStefani, borderColor: '#A0522D', borderDash: [6,4], pointRadius: 0, tension: 0.1, fill: false },
+    ];
+  } else if (tipo === 'ticket') {
+    datasets = [
+      { label: 'Ticket Médio Geral', data: historicoData.map(d => d.pedidos_geral > 0 ? parseFloat((d.receita_geral / d.pedidos_geral).toFixed(2)) : null), borderColor: '#1A1916', backgroundColor: 'rgba(26,25,22,0.08)', tension: 0.3, fill: true, pointRadius: 5, pointBackgroundColor: '#1A1916' },
+      { label: 'Ticket Médio Stéfani', data: historicoData.map(d => d.pedidos_stefani > 0 ? parseFloat((d.receita_stefani / d.pedidos_stefani).toFixed(2)) : null), borderColor: '#607080', backgroundColor: 'rgba(96,112,128,0.08)', tension: 0.3, fill: false, pointRadius: 5, pointBackgroundColor: '#607080' },
+    ];
+  } else if (tipo === 'pedidos') {
+    datasets = [
+      { label: 'Pedidos Geral', data: historicoData.map(d => d.pedidos_geral), borderColor: '#1A1916', backgroundColor: 'rgba(26,25,22,0.08)', tension: 0.3, fill: true, pointRadius: 5, pointBackgroundColor: '#1A1916' },
+      { label: 'Pedidos Stéfani', data: historicoData.map(d => d.pedidos_stefani), borderColor: '#607080', backgroundColor: 'rgba(96,112,128,0.08)', tension: 0.3, fill: false, pointRadius: 5, pointBackgroundColor: '#607080' },
+    ];
+  }
+
+  if (tendenciaChartObj) tendenciaChartObj.destroy();
+  tendenciaChartObj = new Chart(canvas, {
+    type: 'line',
+    data: { labels, datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { labels: { font: { family: 'DM Sans', size: 12 }, color: '#6B6860', boxWidth: 20, padding: 16 } },
+        tooltip: {
+          backgroundColor: '#fff',
+          borderColor: '#D8D5CC',
+          borderWidth: 1,
+          titleColor: '#1A1916',
+          bodyColor: '#6B6860',
+          padding: 12,
+          callbacks: {
+            label: ctx => {
+              const v = ctx.raw;
+              if (v == null) return ctx.dataset.label + ': —';
+              if (tipo === 'pedidos') return ctx.dataset.label + ': ' + v + ' ped.';
+              return ctx.dataset.label + ': R$ ' + v.toLocaleString('pt-BR', {minimumFractionDigits:2});
+            }
+          }
+        }
+      },
+      scales: {
+        x: { grid: { color: '#F0EFEC' }, ticks: { font: { family: 'DM Sans', size: 11 }, color: '#9B9890' } },
+        y: {
+          grid: { color: '#F0EFEC' },
+          ticks: {
+            font: { family: 'DM Sans', size: 11 },
+            color: '#9B9890',
+            callback: v => tipo === 'pedidos' ? v : 'R$ ' + (v >= 1000 ? (v/1000).toFixed(0) + 'k' : v)
+          }
+        }
+      }
+    }
+  });
 }
 
 // Mantém salvarNoSheets como stub (salvar é feito direto na planilha)
