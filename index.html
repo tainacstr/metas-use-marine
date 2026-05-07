@@ -1201,9 +1201,27 @@ async function carregarDoCSV() {
 
     // Lê todas as linhas de dados
     const dataRows = lines.slice(1).filter(r => r.some(c => c.trim() !== ''));
-    historicoData = dataRows.map(rowToObj).filter(r => r.dia).sort((a,b) => a.dia - b.dia);
+    const rawDias = dataRows.map(rowToObj).filter(r => r.dia).sort((a,b) => a.dia - b.dia);
 
-    // Aplica última linha ao painel
+    // Constrói acumulado dia a dia (Opção A: cada linha = valor do dia)
+    let acumGeral = 0, acumPedidosGeral = 0, acumStefani = 0, acumPedidosStefani = 0;
+    historicoData = rawDias.map(d => {
+      acumGeral         += d.receita_geral   || 0;
+      acumPedidosGeral  += d.pedidos_geral   || 0;
+      acumStefani       += d.receita_stefani || 0;
+      acumPedidosStefani+= d.pedidos_stefani || 0;
+      return {
+        dia:             d.dia,
+        receita_geral:   parseFloat(acumGeral.toFixed(2)),
+        pedidos_geral:   acumPedidosGeral,
+        receita_stefani: parseFloat(acumStefani.toFixed(2)),
+        pedidos_stefani: acumPedidosStefani,
+        feriados:        d.feriados,
+        atualizado_em:   d.atualizado_em
+      };
+    });
+
+    // Aplica última linha acumulada ao painel
     const last = historicoData[historicoData.length - 1];
     applyState(last);
     saveState();
