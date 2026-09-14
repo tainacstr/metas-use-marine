@@ -748,6 +748,12 @@
     <div class="needed-grid" id="neededGrid"></div>
   </div>
 
+  <!-- PROJEÇÃO DE FECHAMENTO -->
+  <div class="rhythm-card" id="projCard" style="margin-top:12px;">
+    <div class="panel-header">📊 Projeção de fechamento — no ritmo atual</div>
+    <div id="projGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px 16px;"></div>
+  </div>
+
   <!-- STEFANI SECTION -->
   <div class="section-title">Atendimento Online · Stéfani</div>
   <div class="stefani-row" id="stefaniCards"></div>
@@ -890,6 +896,7 @@ function calcular() {
   document.getElementById('diasUteisRestantes').textContent = diasUteisRestantesStefani + ' dias úteis';
 
   renderMetaCardsGeral(geral, diasRestantesGeral, ticketGeral, pedidosGeral);
+  renderProjecao(geral, stefani, diaAtual, diasRestantesGeral);
   renderNeededGrid(geral, diasRestantesGeral);
   renderStefaniCards(stefani, diasUteisRestantesStefani, geral, ticketStefani, pedidosStefani);
   renderSummary(geral, stefani, diasRestantesGeral, diasUteisRestantesStefani);
@@ -951,6 +958,35 @@ function renderMetaCardsGeral(geral, diasRestantes, ticketGeral, pedidosGeral) {
       </div>
     </div>`;
   }).join('');
+}
+
+function renderProjecao(geral, stefani, diaAtual, diasRestantesGeral) {
+  const container = document.getElementById('projGrid');
+  if (!container) return;
+  if (diaAtual < 1 || geral <= 0) { container.innerHTML = '<div style="grid-column:1/-1;font-size:12px;color:var(--text3);padding:4px 0;">Sem dados suficientes para projetar.</div>'; return; }
+
+  const mediaGeral = geral / diaAtual;
+  const projGeral  = mediaGeral * DIAS_MES;
+  const mediaStefani = stefani / diaAtual;
+  const projStefani  = mediaStefani * DIAS_MES;
+
+  const fmt = v => 'R$ ' + v.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+  const fmtK = v => v >= 1000 ? 'R$ ' + (v/1000).toFixed(1).replace('.',',') + 'k' : fmt(v);
+
+  function card(label, proj, media, meta) {
+    const cor = proj >= meta ? 'var(--green)' : proj >= meta*0.85 ? 'var(--amber)' : 'var(--red)';
+    return `<div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;">
+      <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);margin-bottom:6px;">${label}</div>
+      <div style="font-family:'DM Serif Display',serif;font-size:22px;font-weight:bold;color:${cor};">${fmtK(proj)}</div>
+      <div style="font-size:11px;color:var(--text2);margin-top:3px;">média R$ ${media.toLocaleString('pt-BR',{minimumFractionDigits:0,maximumFractionDigits:0})}/dia · ${diaAtual} dias registrados</div>
+    </div>`;
+  }
+
+  // metas de referência para coloração
+  const metaGeralBronze = 33000;
+  const metaStefBronze  = 9900;
+  container.innerHTML = card('Loja geral', projGeral, mediaGeral, metaGeralBronze)
+                      + card('Stéfani', projStefani, mediaStefani, metaStefBronze);
 }
 
 function renderNeededGrid(geral, diasRestantes) {
